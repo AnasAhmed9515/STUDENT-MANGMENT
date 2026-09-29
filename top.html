@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Top Student
+    </title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+
+        .top-page {
+            min-height: 100vh;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 30px;
+        }
+
+        .top-box {
+            width: 700px;
+            max-width: 100%;
+
+            background: white;
+
+            border-radius: 20px;
+
+            padding: 40px;
+
+            text-align: center;
+
+            border: 1px solid var(--border);
+
+            box-shadow:
+                0 12px 40px rgba(30, 40, 70, 0.08);
+        }
+
+        .back {
+            display: block;
+
+            text-align: left;
+
+            color: var(--primary);
+
+            text-decoration: none;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+            margin-bottom: 25px;
+        }
+
+        .trophy-big {
+            width: 80px;
+            height: 80px;
+
+            margin: 10px auto 20px;
+
+            border-radius: 22px;
+
+            background: #fff1bd;
+
+            color: #a66d00;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 38px;
+        }
+
+        .top-label {
+            color: var(--primary);
+
+            font-size: 10px;
+
+            font-weight: bold;
+
+            letter-spacing: 1.5px;
+        }
+
+        .top-box h1 {
+            font-size: 32px;
+
+            margin: 8px 0;
+        }
+
+        .student-details {
+            color: var(--muted);
+
+            font-size: 12px;
+        }
+
+        .big-score {
+            font-size: 55px;
+
+            font-weight: bold;
+
+            color: var(--primary);
+
+            margin-top: 25px;
+
+            letter-spacing: -2px;
+        }
+
+        .score-text {
+            color: var(--muted);
+
+            font-size: 11px;
+
+            margin-top: -5px;
+        }
+
+        .top-summary {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 15px;
+
+            margin: 30px 0;
+        }
+
+        .summary-box {
+            background: #f7f8fb;
+
+            padding: 18px;
+
+            border-radius: 12px;
+        }
+
+        .summary-box span {
+            display: block;
+
+            color: var(--muted);
+
+            font-size: 10px;
+
+            margin-bottom: 6px;
+        }
+
+        .summary-box strong {
+            font-size: 20px;
+        }
+
+        .dashboard-button {
+            display: inline-block;
+
+            background: var(--primary);
+
+            color: white;
+
+            padding: 12px 20px;
+
+            border-radius: 9px;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+            text-decoration: none;
+        }
+
+        .dashboard-button:hover {
+            background: var(--primary-dark);
+        }
+
+        @media (max-width: 600px) {
+
+            .top-page {
+                padding: 15px;
+            }
+
+            .top-box {
+                padding: 25px;
+            }
+
+            .top-box h1 {
+                font-size: 26px;
+            }
+
+            .big-score {
+                font-size: 45px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="top-page">
+
+
+    <div class="top-box">
+
+
+        <!-- BACK -->
+
+        <a href="/" class="back">
+
+            ← Back to Dashboard
+
+        </a>
+
+
+
+        <!-- TROPHY -->
+
+        <div class="trophy-big">
+
+            ★
+
+        </div>
+
+
+
+        <p class="top-label">
+
+            TOP STUDENT
+
+        </p>
+
+
+
+        <!-- NAME -->
+
+        <h1>
+
+            {{ top.name }}
+
+        </h1>
+
+
+        <p class="student-details">
+
+            Roll No:
+            {{ top.rollno }}
+
+            &nbsp; · &nbsp;
+
+            {{ top.course }}
+
+        </p>
+
+
+
+        <!-- SCORE -->
+
+        <div class="big-score">
+
+            {{ "%.1f"|format(top.average) }}%
+
+        </div>
+
+
+        <p class="score-text">
+
+            Highest Average
+
+        </p>
+
+
+
+        <!-- SUMMARY -->
+
+        <div class="top-summary">
+
+
+            <div class="summary-box">
+
+                <span>
+
+                    TOTAL MARKS
+
+                </span>
+
+                <strong>
+
+                    {{ top.total }}/500
+
+                </strong>
+
+            </div>
+
+
+            <div class="summary-box">
+
+                <span>
+
+                    AVERAGE
+
+                </span>
+
+                <strong>
+
+                    {{ "%.1f"|format(top.average) }}%
+
+                </strong>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- BUTTON -->
+
+        <a
+            href="/"
+            class="dashboard-button">
+
+            Return to Dashboard
+
+        </a>
+
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

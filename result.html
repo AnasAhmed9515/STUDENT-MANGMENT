@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {{ student["Name"] }} - Result
+    </title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+
+        .result-page {
+            min-height: 100vh;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            padding: 30px;
+        }
+
+        .result-box {
+            width: 900px;
+            max-width: 100%;
+
+            background: white;
+
+            border-radius: 18px;
+
+            padding: 35px;
+
+            box-shadow:
+                0 10px 35px rgba(30, 40, 70, 0.08);
+
+            border: 1px solid var(--border);
+        }
+
+        .back {
+            color: var(--primary);
+
+            text-decoration: none;
+
+            font-size: 12px;
+
+            font-weight: bold;
+        }
+
+        .result-header {
+            display: flex;
+
+            align-items: center;
+
+            gap: 15px;
+
+            margin-top: 35px;
+
+            margin-bottom: 30px;
+        }
+
+        .result-avatar {
+            width: 60px;
+            height: 60px;
+
+            border-radius: 15px;
+
+            background: var(--light-primary);
+
+            color: var(--primary);
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 22px;
+
+            font-weight: bold;
+        }
+
+        .result-header h1 {
+            font-size: 28px;
+
+            margin: 5px 0;
+        }
+
+        .result-header p {
+            color: var(--muted);
+
+            font-size: 12px;
+        }
+
+        .result-grade {
+            margin-left: auto;
+
+            width: 55px;
+            height: 45px;
+
+            border-radius: 10px;
+
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+
+            background: var(--light-green);
+
+            color: var(--green);
+
+            font-size: 17px;
+
+            font-weight: bold;
+        }
+
+
+        /* SUMMARY */
+
+        .summary {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 15px;
+
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background: #f7f8fb;
+
+            border-radius: 12px;
+
+            padding: 20px;
+        }
+
+        .summary-card span {
+            color: var(--muted);
+
+            font-size: 11px;
+
+            display: block;
+
+            margin-bottom: 7px;
+        }
+
+        .summary-card strong {
+            font-size: 24px;
+        }
+
+
+        /* SUBJECTS */
+
+        .subject-title {
+            font-size: 17px;
+
+            margin-bottom: 15px;
+        }
+
+        .subjects {
+            display: grid;
+
+            grid-template-columns:
+                repeat(5, 1fr);
+
+            gap: 12px;
+        }
+
+        .subject {
+            border: 1px solid var(--border);
+
+            border-radius: 12px;
+
+            padding: 17px;
+
+            text-align: center;
+        }
+
+        .subject span {
+            display: block;
+
+            color: var(--muted);
+
+            font-size: 10px;
+        }
+
+        .subject strong {
+            display: block;
+
+            font-size: 25px;
+
+            margin: 8px 0;
+        }
+
+        .subject small {
+            color: var(--muted);
+
+            font-size: 10px;
+        }
+
+
+        /* PRINT */
+
+        .print-button {
+            margin-top: 25px;
+
+            padding: 12px 20px;
+
+            border: none;
+
+            border-radius: 9px;
+
+            background: var(--primary);
+
+            color: white;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .print-button:hover {
+            background: var(--primary-dark);
+        }
+
+
+        @media (max-width: 700px) {
+
+            .result-page {
+                padding: 15px;
+            }
+
+            .result-box {
+                padding: 22px;
+            }
+
+            .result-header {
+                align-items: flex-start;
+            }
+
+            .subjects {
+                grid-template-columns: 1fr 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="result-page">
+
+
+    <div class="result-box">
+
+
+        <!-- BACK -->
+
+        <a href="/" class="back">
+
+            ← Back to Dashboard
+
+        </a>
+
+
+
+        <!-- STUDENT HEADER -->
+
+        <div class="result-header">
+
+
+            <div class="result-avatar">
+
+                {{ student["Name"][0] | upper }}
+
+            </div>
+
+
+            <div>
+
+                <p class="label">
+
+                    STUDENT RESULT
+
+                </p>
+
+                <h1>
+
+                    {{ student["Name"] }}
+
+                </h1>
+
+                <p>
+
+                    Roll No:
+                    {{ rollno }}
+
+                    &nbsp; · &nbsp;
+
+                    {{ student["Course"] }}
+
+                </p>
+
+            </div>
+
+
+            <div class="result-grade">
+
+                {{ grade }}
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- SUMMARY -->
+
+        <div class="summary">
+
+
+            <div class="summary-card">
+
+                <span>
+
+                    TOTAL MARKS
+
+                </span>
+
+                <strong>
+
+                    {{ total }}/500
+
+                </strong>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <span>
+
+                    AVERAGE
+
+                </span>
+
+                <strong>
+
+                    {{ "%.1f"|format(average) }}%
+
+                </strong>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- SUBJECT MARKS -->
+
+        <h2 class="subject-title">
+
+            Subject Marks
+
+        </h2>
+
+
+        <div class="subjects">
+
+
+            {% for mark in student["MARKS"] %}
+
+
+            <div class="subject">
+
+                <span>
+
+                    Subject {{ loop.index }}
+
+                </span>
+
+
+                <strong>
+
+                    {{ mark }}
+
+                </strong>
+
+
+                <small>
+
+                    / 100
+
+                </small>
+
+            </div>
+
+
+            {% endfor %}
+
+
+        </div>
+
+
+
+        <!-- PRINT -->
+
+        <button
+            class="print-button"
+            onclick="window.print()">
+
+            Print Result
+
+        </button>
+
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

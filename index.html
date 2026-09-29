@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Result Management</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-box">
+                SR
+            </div>
+
+            <div>
+                <h2>StudentHub</h2>
+                <p>Result Management</p>
+            </div>
+        </div>
+
+
+        <nav>
+
+            <a href="/" class="active">
+                Dashboard
+            </a>
+
+            <a href="#students">
+                Students
+            </a>
+
+            <a href="#add-student">
+                Add Student
+            </a>
+
+            <a href="#search-student">
+                Search
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <p>Python + Flask</p>
+
+            <small>
+                Student Result System
+            </small>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+        <!-- HEADER -->
+        <header class="header">
+
+            <div>
+
+                <p class="label">
+                    STUDENT RESULT MANAGEMENT
+                </p>
+
+                <h1>
+                    Dashboard
+                </h1>
+
+                <p class="subtitle">
+                    Manage students, marks and results.
+                </p>
+
+            </div>
+
+
+            <a href="#add-student"
+               class="add-button">
+
+                + Add Student
+
+            </a>
+
+        </header>
+
+
+        <!-- FLASH MESSAGE -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                {% for category, message in messages %}
+
+                    <div class="message {{ category }}">
+
+                        {{ message }}
+
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        {% endwith %}
+
+
+
+        <!-- STAT CARDS -->
+        <section class="stats">
+
+
+            <div class="stat-card">
+
+                <p>
+                    Total Students
+                </p>
+
+                <h2>
+                    {{ total_students }}
+                </h2>
+
+                <span>
+                    Students registered
+                </span>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <p>
+                    Class Average
+                </p>
+
+                <h2>
+                    {{ "%.1f"|format(average_class) }}%
+                </h2>
+
+                <span>
+                    Overall average
+                </span>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <p>
+                    Top Student
+                </p>
+
+                {% if top %}
+
+                    <h2>
+                        {{ top.name }}
+                    </h2>
+
+                    <span>
+                        {{ "%.1f"|format(top.average) }}% average
+                    </span>
+
+                {% else %}
+
+                    <h2>---</h2>
+
+                    <span>
+                        No students
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- SEARCH + TOP STUDENT -->
+        <section class="two-column">
+
+
+            <!-- SEARCH -->
+            <div class="card" id="search-student">
+
+                <p class="label">
+                    SEARCH
+                </p>
+
+                <h2>
+                    Find a Student
+                </h2>
+
+
+                <form action="/search"
+                      method="GET"
+                      class="search-form">
+
+                    <input
+                        type="text"
+                        name="rollno"
+                        placeholder="Enter roll number"
+                        required
+                    >
+
+                    <button type="submit">
+                        Search
+                    </button>
+
+                </form>
+
+
+                {% if search_result %}
+
+                <div class="search-result">
+
+                    <div class="student-info">
+
+                        <div class="avatar">
+                            {{ search_result.name[0] | upper }}
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                {{ search_result.name }}
+                            </h3>
+
+                            <p>
+                                Roll No:
+                                {{ search_result.rollno }}
+                            </p>
+
+                            <p>
+                                {{ search_result.course }}
+                            </p>
+
+                        </div>
+
+                        <div class="grade">
+
+                            {{ search_result.grade }}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="result-info">
+
+                        <div>
+                            <span>Total</span>
+
+                            <strong>
+                                {{ search_result.total }}/500
+                            </strong>
+                        </div>
+
+
+                        <div>
+                            <span>Average</span>
+
+                            <strong>
+                                {{ "%.1f"|format(search_result.average) }}%
+                            </strong>
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+
+
+            <!-- TOP STUDENT -->
+            <div class="card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <p class="label">
+                            PERFORMANCE
+                        </p>
+
+                        <h2>
+                            Top Student
+                        </h2>
+
+                    </div>
+
+
+                    <a href="/top">
+                        View →
+                    </a>
+
+                </div>
+
+
+                {% if top %}
+
+                <div class="top-student">
+
+                    <div class="trophy">
+                        ★
+                    </div>
+
+
+                    <div class="top-details">
+
+                        <h3>
+                            {{ top.name }}
+                        </h3>
+
+                        <p>
+                            Roll No: {{ top.rollno }}
+                        </p>
+
+
+                        <div class="progress">
+
+                            <div
+                                style="width: {{ top.average }}%">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="score">
+
+                        <strong>
+                            {{ "%.1f"|format(top.average) }}%
+                        </strong>
+
+                        <span>
+                            Average
+                        </span>
+
+                    </div>
+
+                </div>
+
+                {% else %}
+
+                    <p class="empty">
+                        Add students to see the top student.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+
+
+        <!-- STUDENT TABLE -->
+        <section class="card students-card"
+                 id="students">
+
+
+            <div class="card-header">
+
+                <div>
+
+                    <p class="label">
+                        STUDENT LIST
+                    </p>
+
+                    <h2>
+                        All Students
+                    </h2>
+
+                </div>
+
+
+                <span class="count">
+
+                    {{ total_students }} students
+
+                </span>
+
+            </div>
+
+
+
+            {% if students %}
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Student
+                            </th>
+
+                            <th>
+                                Roll No
+                            </th>
+
+                            <th>
+                                Course
+                            </th>
+
+                            <th>
+                                Total
+                            </th>
+
+                            <th>
+                                Average
+                            </th>
+
+                            <th>
+                                Grade
+                            </th>
+
+                            <th>
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                    {% for student in students %}
+
+                        <tr>
+
+                            <td>
+
+                                <div class="student-cell">
+
+                                    <div class="small-avatar">
+
+                                        {{ student.name[0] | upper }}
+
+                                    </div>
+
+                                    <strong>
+
+                                        {{ student.name }}
+
+                                    </strong>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                {{ student.rollno }}
+
+                            </td>
+
+
+                            <td>
+
+                                {{ student.course }}
+
+                            </td>
+
+
+                            <td>
+
+                                {{ student.total }}/500
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="average">
+
+                                    <span>
+
+                                        {{ "%.1f"|format(student.average) }}%
+
+                                    </span>
+
+                                    <div class="small-progress">
+
+                                        <div
+                                            style="width: {{ student.average|default(0)|float }}%;">
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="grade">
+
+                                    {{ student.grade }}
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <a
+                                    href="/result/{{ student.rollno }}"
+                                    class="view-button">
+
+                                    View
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            {% else %}
+
+                <div class="empty">
+
+                    No students found.
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+
+        <!-- ADD STUDENT -->
+        <section class="card add-card"
+                 id="add-student">
+
+
+            <p class="label">
+                NEW RECORD
+            </p>
+
+            <h2>
+                Add Student
+            </h2>
+
+
+            <form
+                action="/add"
+                method="POST"
+                class="student-form">
+
+
+                <!-- BASIC DETAILS -->
+
+                <div class="form-row">
+
+
+                    <div>
+
+                        <label>
+                            Roll Number
+                        </label>
+
+                        <input
+                            type="text"
+                            name="rollno"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div>
+
+                        <label>
+                            Student Name
+                        </label>
+
+                        <input
+                            type="text"
+                            name="name"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div>
+
+                        <label>
+                            Course
+                        </label>
+
+                        <input
+                            type="text"
+                            name="course"
+                            placeholder="CSE"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- MARKS -->
+
+                <p class="marks-title">
+                    Subject Marks
+                </p>
+
+
+                <div class="marks-row">
+
+
+                    <div>
+
+                        <label>
+                            Subject 1
+                        </label>
+
+                        <input
+                            type="number"
+                            name="mark1"
+                            min="0"
+                            max="100"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div>
+
+                        <label>
+                            Subject 2
+                        </label>
+
+                        <input
+                            type="number"
+                            name="mark2"
+                            min="0"
+                            max="100"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div>
+
+                        <label>
+                            Subject 3
+                        </label>
+
+                        <input
+                            type="number"
+                            name="mark3"
+                            min="0"
+                            max="100"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div>
+
+                        <label>
+                            Subject 4
+                        </label>
+
+                        <input
+                            type="number"
+                            name="mark4"
+                            min="0"
+                            max="100"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div>
+
+                        <label>
+                            Subject 5
+                        </label>
+
+                        <input
+                            type="number"
+                            name="mark5"
+                            min="0"
+                            max="100"
+                            required
+                        >
+
+                    </div>
+
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="submit-button">
+
+                    Add Student
+
+                </button>
+
+
+            </form>
+
+        </section>
+
+
+        <footer>
+
+            Student Result Management · Python + Flask
+
+        </footer>
+
+
+    </main>
+
+</div>
+
+
+</body>
+
+</html>
